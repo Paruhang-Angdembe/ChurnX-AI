@@ -21,7 +21,7 @@ ChurnX-AI is a hybrid AI assistant designed to predict customer churn and provid
   - Data cleansing steps (handling missing values, etc.) will be crucial before modeling.
 
 ### Architecture Diagram 
- `/docs/Architecture-Diagram.drawio.png`
+![Architecture Diagram](docs/Architecture-Diagram.drawio.png)
 
 ---
 
