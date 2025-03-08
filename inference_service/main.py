@@ -11,27 +11,32 @@ class ChurnInput(BaseModel):
     MonthlyCharges: float
     TotalCharges: float
     SeniorCitizen: float
+    Contract: str
+    InternetService: str
     # Add additional fields as needed
     # The field names should match the feature names in the training data
     
+# Global variable to store the loaded pipeline
+pipeline = None
+
 # Use a global dictionary to store resources
 ml_models = {}
     
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Startup: load the ML model
+    global pipeline
     try: 
-        ml_models["model"] = joblib.load("../artifacts/model.joblib")
-        print("Model loaded successfully")
+        pipeline = joblib.load("artifacts/full_pipeline.joblib")
+        print("Pipeline loaded successfully!")
     except Exception as e:
-        print("Error loading model:", e)
-        raise HTTPException(status_code=500, detail="Model not loaded.")
+        print("Error loading pipeline:", e)
+        raise HTTPException(status_code=500, detail="Pipeline not loaded.")
     
     # Yield control back to the app; the code below will run on shutdown.
     yield
     # Shutdown: clean up resources
-    ml_models.clear()
-    print("Cleaned up ML models.")
+    pipeline = None
+    print("Cleaned up Pipeline.")
     
     
 # Create the FastAPI app with the lifespan parameter.
@@ -42,16 +47,26 @@ async def predict_churn(input_data: ChurnInput):
     try:
         # Convert input data (Pydantic model) into a Dataframe.
         data = pd.DataFrame([input_data.model_dump()])
-        # Retrieve the loaded model from pour global dictionary
-        model = ml_models.get("model")
-        if model is None:
-            raise HTTPException(status_code=500, detail="Model not loaded")
-        # Make Predictoin.
-        prediction = model.predict(data)
-        prediction_proba = model.predict_proba(data)[:, 1]
+        #  Use the pipeline to both preprocess and predict
+        prediction = pipeline.predict(data)
+        prediction_proba = pipeline.predict_proba(data)[:,1]
         return{
-            "prediction": int(prediction[0]), # 0 for no churn, 1 for churn
+            "prediction": int(prediction[0]),
             "probability": float(prediction_proba[0])
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+# {
+#   "tenure": 10,
+#   "MonthlyCharges": 0,
+#   "TotalCharges": 0,
+#   "SeniorCitizen": 0,
+#   "Contract": "Month-to-month",
+#   "InternetService": "DSL"
+# }
+'''
+    Means that for the provided inpout data, the model predicts a "0"-"no churn".
+    The model estimates there's roughly a 28.67% chance of the customer churning, and it 
+    ulimately classifies the customer as not likely to churn.
+'''
