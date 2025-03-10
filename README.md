@@ -1,7 +1,7 @@
 # ChurnX-AI
 
 ## Overview
-ChurnX-AI is a hybrid AI assistant designed to predict customer churn and provide natural language explanations for those predictions. The project aims to combine traditional machine learning with a local LLM (Large Language Model)or `RAG`, to help businesses understand why customers might leave, enabling them to take proactive measures. The system will process customer data, train predictive models, deploy an inference service, and integrate a user-friendly front-end dashboard along with an explanation module. 
+ChurnX-AI is a hybrid AI assistant designed to predict customer churn and provide natural language explanations for those predictions. The project aims to combine traditional machine learning with a  OPENAI LLM (Large Language Model)or `RAG`, to help businesses understand why customers might leave, enabling them to take proactive measures. The system will process customer data, train predictive models, deploy an inference service, and integrate a user-friendly front-end dashboard along with an explanation module. 
 
 ---
 
@@ -35,24 +35,36 @@ ChurnX-AI is a hybrid AI assistant designed to predict customer churn and provid
 - **Notes:**  
   - Future improvements may involve experimenting with more complex models (e.g., Random Forests, Gradient Boosting) if performance requirements are not met.
 
+### Phase 3: Inference Service with LLM Integration & Docker Containerization (Completed)
+- **Inference Service with FastAPI:**  
+  - Developed a FastAPI application that loads the saved full pipeline (including preprocessing and model) and exposes two endpoints:
+    - `/predict_churn` for obtaining churn predictions.
+    - `/explain_churn` for obtaining predictions along with natural language explanations.
+- **LLM Integration:**  
+  - Integrated API-based LLM explanations using OpenAI’s GPT-3.5-turbo to generate concise explanations for each prediction.
+- **Containerization:**  
+  - Created a Dockerfile and a dedicated `requirements.txt` in the `inference_service` folder.
+  - Successfully built and ran a Docker image for the inference service.
+- **Testing:**  
+  - Verified the service locally via Swagger UI to ensure endpoints return correct predictions and explanations.
+
+![Prediction and Explanation](docs/openai.png)
+
+
 ### Architecture Diagram 
 ![Architecture Diagram](docs/Architecture-Diagram.drawio.png)
 
 ---
 
-## Next Steps: Phase 3 - Inference Service
+## Next Steps: Phase 4 - Front-End Dashboard
 
-- **Inference Service with FastAPI & Docker:**
-  - **Develop a FastAPI Application:**  
-    Build a FastAPI app that loads the baseline model and serves predictions via an API endpoint (e.g., `/predict_churn`).
-  - **Local Testing:**  
-    Test the API using the interactive Swagger UI provided by FastAPI or tools like Postman.
-  - **Containerization:**  
-    Create a Dockerfile and containerize your API for easier deployment.
-- **Future Enhancements:**
-  - Integrate a front-end dashboard (React/Next.js) to interact with the API.
-  - Extend the system with an LLM explanation module to generate natural language explanations.
-  - Explore advanced model tuning, feature engineering, and CI/CD pipelines for continuous improvements.
+- **Front-End Integration:**  
+  - Develop a user-friendly dashboard using React or Next.js to interact with the API.
+- **Advanced Model Tuning & CI/CD:**  
+  - Implement additional model tuning and feature engineering.
+  - Set up CI/CD pipelines for automated testing and deployment.
+- **Enhanced Monitoring & Logging:**  
+  - Improve error handling, logging, and monitoring for production-readiness.
 
 ---
 
@@ -63,13 +75,18 @@ ChurnX-AI is a hybrid AI assistant designed to predict customer churn and provid
 │   └── telco_customer_churn.csv
 ├── docs
 │   └── Architecture-Diagram.drawio.png
+│   └── openai.png
+├── inference_service
+│   ├── main.py                # FastAPI inference service with LLM integration
+│   ├── Dockerfile             # Dockerfile for containerizing the inference service
+│   └── requirements.txt       # Dependencies for the inference service
 ├── notebooks
 │   └── EDA.ipynb
 ├── src
-│   ├── preprocess.py   (Phase 2)
-│   └── train.py        (Phase 2)
+│   ├── preprocess.py          # Data preprocessing script (Phase 2)
+│   └── train.py               # Model training script (Phase 2)
 ├── artifacts
-│   └── model.joblib    (Phase 2)
+│   └── model.joblib           # Trained model artifact from Phase 2
 ├── tests
-│   └── ...
-└── README.md           (This file)
+│   └── ...                    
+└── README.md                  # This file

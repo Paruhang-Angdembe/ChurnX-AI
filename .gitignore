@@ -2,3 +2,5 @@ data/processed_X_test.csv
 data/processed_X_train.csv
 data/processed_y_test.csv
 data/processed_y_train.csv
+
+.env

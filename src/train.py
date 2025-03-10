@@ -57,3 +57,5 @@ print(f"ROC AUC: {roc_auc:.2f}")
 
 # Save the entire pipeline.
 joblib.dump(pipeline, "artifacts/full_pipeline.joblib")
+
+# This ensures that same preprocessing is applied during inference"
