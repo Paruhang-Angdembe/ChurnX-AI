@@ -1,4 +1,6 @@
 # Use an official Python runtime as the base image.
+
+# FROM --platform=linux/amd64 python:3.9-slim
 FROM python:3.9-slim
 
 # Set the working directory in the container.
@@ -6,15 +8,12 @@ WORKDIR /app
 
 # Copy the requirements file (if you have one) or install dependencies directly.
 # If you have a requirements.txt file, copy it into the container and install:
-COPY inference_service/requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+COPY . .
+RUN pip install --upgrade pip && pip install -r inference_service/requirements.txt
 # Alternatively, install required packages directly:
 # RUN pip install --upgrade pip && \
 #     pip install fastapi uvicorn joblib pandas openai python-dotenv
 
-COPY inference_service/ inference_service/
-
-COPY artifacts/ artifacts/
 # Error Note: Keep your Dockerfile in the inference_service folder but change your build command so that
 # the project root (which contains the artifacts folder)
 # docker build -f inference_service/dockerfile -t churnx-ai-inference .
@@ -28,4 +27,14 @@ EXPOSE 8000
 # Command to run your application using Uvicorn.
 CMD ["uvicorn", "inference_service.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-#docker run -d -p 8000:8000 -e OPENAI_API_KEY="" churnx-ai-inference
+# docker build -f inference_service/Dockerfile -t churnx-ai-inference .
+# docker run -d -p 8000:8000 -e OPENAI_API_KEY="" churnx-ai-inference
+# docker logs -f container_id
+# http://localhost:8000/docs 
+
+
+# docker buildx build --platform linux/amd64 -f inference_service/Dockerfile -t churnx-ai:v1.0.3 .
+
+# Authenticate
+# aws ecr get-login-password --region us-east-2 | \
+# docker login --username AWS --password-stdin 559050246132.dkr.ecr.us-east-2.amazonaws.com

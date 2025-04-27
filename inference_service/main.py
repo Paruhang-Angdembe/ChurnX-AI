@@ -27,9 +27,22 @@ class ChurnInput(BaseModel):
     tenure: float
     MonthlyCharges: float
     TotalCharges: float
-    SeniorCitizen: float
     Contract: str
     InternetService: str
+    gender: str
+    SeniorCitizen: int
+    Partner: str
+    Dependents: str
+    PhoneService: str
+    MultipleLines: str
+    OnlineSecurity: str
+    OnlineBackup: str
+    DeviceProtection: str
+    TechSupport: str
+    StreamingTV: str
+    StreamingMovies: str
+    PaperlessBilling: str
+    PaymentMethod: str
 
 # Global variable to store the loaded pipeline
 pipeline = None
@@ -88,8 +101,6 @@ def generate_llm_explanation_api(prompt: str)->str:
     except Exception as e:
         return f"Error generating explanation: {str(e)}"
 
-
-
 @app.post("/explain_churn")
 async def explain_churn(input_data: ChurnInput, tuning: float = Query(1.0, description="Tuning parameter placeholder")):
     try:
@@ -111,3 +122,13 @@ async def explain_churn(input_data: ChurnInput, tuning: float = Query(1.0, descr
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+    
+    
+@app.get("/")
+async def home():
+    return {"message":"Hello World"}
+    
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}  # Always returns 200
+    
