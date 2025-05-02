@@ -7,6 +7,7 @@
 [![License](https://img.shields.io/badge/License-MIT-blue)](LICENSE)
 
 ## Overview
+![ChurnX-AI Demo](docs/demo.gif)
 
 It predicts customer churn and generates natural language explanations using OPENAI's GPT-3.5.
 
@@ -64,9 +65,8 @@ It predicts customer churn and generates natural language explanations using OPE
   - `/explain_churn`: GPT-3.5-turbo explanations (avg. 2s response)  
 - **Dockerized**: 89MB optimized image
 
-### Phase 4 — Production Deployment ✅
-
-![Dashboard](docs/dashboard.png)
+### Phase 4 — Production Deployment 
+![Dashboard](docs/dashboard-v1.0.1.png)
 
 - **AWS Infrastructure**:  
   - Frontend: Streamlit (ECS Fargate + ALB routing) @ port 8501
